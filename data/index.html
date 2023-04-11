@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Night Sky Cam</title>
+    <title>ESPStepper</title>
     <link rel="stylesheet" href="style.css"/>
     <script src="jquery.min.js"></script>
     <script src="lang.js"></script>
@@ -11,90 +11,74 @@
 
 <body>
     <div class="tab">
-        <button id="defaultOpen" class="tablinks" onclick="openPage(event, 'Preview')"
-            data-sw-translate>Preview</button>
-        <button class="tablinks" onclick="openPage(event, 'Timelapse')" data-sw-translate>Timelapse</button>
+        <button id="defaultOpen" class="tablinks" onclick="openPage(event, 'Velocity')"
+            data-sw-translate>Velocity</button>
+        <button class="tablinks" onclick="openPage(event, 'Position')" data-sw-translate>Position</button>
         <!-- <button class="tablinks" onclick="openPage(event, 'Browser')" data-sw-translate>Browser</button> -->
         <button class="tablinks" onclick="openPage(event, 'Setting')" data-sw-translate>Setting</button>
     </div>
     <div id="appLoading" style="display: none">
         <span style="width:100%;text-align:center;" data-sw-translate>loading...</span>
     </div>
-    <div id="Preview" class="tabcontent">
-        <img class="preview-img" id="preview-img" src="/preview/latest.jpg" />
+    <div id="Velocity" class="tabcontent">
         <div>
-            <div><span data-sw-translate>Exposure:</span><input type="number" id="exp-input" autoFocus value="1"
+            <div><span data-sw-translate>Speed:</span><input type="number" id="speed-input" autoFocus value="1"
                     style="position:absolute;right:42px;width:80px;text-align: center;border-top: 0px;border-left: 0px;border-right: 0px;"></input><span
-                    data-sw-translate style="position:absolute;right:6px;">Sec</span></div>
-            <div><input type="range" min="0" max="60" value="1" class="slider" id="exp-range"></div>
-            <div><span data-sw-translate>R Gain:</span><input type="number" step=".01" autoFocus id="r-gain-input" value="1"
-                    style="position:absolute;right:42px;width:80px;text-align: center;border-top: 0px;border-left: 0px;border-right: 0px;"></input><span
-                    data-sw-translate style="position:absolute;right:6px;">%</span></div>
-            <div><input type="range" min="1" max="7" value="1" class="slider" id="r-gain-range"></div>
-            <div><span data-sw-translate>G Gain:</span><input type="number" step=".01" autoFocus id="g-gain-input" value="1"
-                    style="position:absolute;right:42px;width:80px;text-align: center;border-top: 0px;border-left: 0px;border-right: 0px;"></input><span
-                    data-sw-translate style="position:absolute;right:6px;">%</span></div>
-            <div><input type="range" min="1" max="7" value="1" class="slider" id="g-gain-range"></div>
-            <div><span data-sw-translate>B Gain:</span><input type="number" step=".01" autoFocus id="b-gain-input" value="1"
-                    style="position:absolute;right:42px;width:80px;text-align: center;border-top: 0px;border-left: 0px;border-right: 0px;"></input><span
-                    data-sw-translate style="position:absolute;right:6px;">%</span></div>
-            <div><input type="range" min="1" max="7" value="1" class="slider" id="b-gain-range"></div>
-            <div><span data-sw-translate>Global Gain:</span><input type="number" step=".01" autoFocus id="global-gain-input" value="1"
-                style="position:absolute;right:42px;width:80px;text-align: center;border-top: 0px;border-left: 0px;border-right: 0px;"></input><span
-                data-sw-translate style="position:absolute;right:6px;">%</span></div>
-        <div><input type="range" min="1" max="28" value="1" class="slider" id="global-gain-range"></div>
-        </div>
-        <div style="margin-top:10px;">
-            <button style="height:40px;width:calc( 50% - 6px );margin-right:6px;" onclick="onShot()"
-                data-sw-translate>Shot</button>
-            <button style="height:40px;width:calc( 50% - 6px );" onclick="onReload()" data-sw-translate>Reload</button>
+                    data-sw-translate style="position:absolute;right:6px;">X</span>
+            </div>
+            <div><input type="range" min="1" max="10" value="1" class="slider" id="speed-range"></div>
+            <div style="margin-top:10px;">
+                <button style="height:40px;width:calc( 50% - 6px );margin-right:6px;" onclick="onBackwardDirection()"
+                    data-sw-translate>Backward</button>
+                <button style="height:40px;width:calc( 50% - 6px );" onclick="onForwardDirection()" data-sw-translate>Forward</button>
+            </div>
         </div>
     </div>
 
-    <div id="Timelapse" class="tabcontent">
-        <img class="preview-img" id="preview-img" src="/preview/latest.jpg" />
-        <p>
-        <div style="position:relative;margin-bottom:20px;width:100%">
-            <span data-sw-translate>Progress: </span> <input style="width:100px;border:0px;text-align: left;" id="progress-input"/>
-            <div style="position:absolute;right:0px;top:0px;"><span data-sw-translate>Video Length: </span> <input style="width:30px;border:0px;text-align: right;" id="video-length-input"/> <span data-sw-translate>Sec</span></div>
-        </div> 
+    <div id="Position" class="tabcontent">
         <div>
-            <div><span data-sw-translate>Interval:</span><input type="number" id="interval-input" value="1"
+            <div><span data-sw-translate>Position:</span><input type="number" id="speed-input" autoFocus value="1"
                     style="position:absolute;right:42px;width:80px;text-align: center;border-top: 0px;border-left: 0px;border-right: 0px;"></input><span
-                    data-sw-translate style="position:absolute;right:6px;">Sec</span></div>
-            <div><input type="range" min="1" max="100" value="1" class="slider" id="interval-range"></div>
-            <div><span data-sw-translate>Frames:</span><input type="number" id="frames-input" value="1"
-                    style="position:absolute;right:42px;width:80px;text-align: center;border-top: 0px;border-left: 0px;border-right: 0px;"></input><span
-                    data-sw-translate style="position:absolute;right:6px;"></span></div>
-            <div><input type="range" min="1" max="10000" value="1" class="slider" id="frames-range"></div>
+                    data-sw-translate style="position:absolute;right:6px;">Turns</span>
+            </div>
+            <div><input type="range" min="1" max="10" value="1" class="slider" id="position-range"></div>
+            <div style="margin-top:10px;">
+                <button style="height:40px;width:calc( 50% - 6px );margin-right:6px;" onclick="onBackwardDirection()"
+                    data-sw-translate>Backward</button>
+                <button style="height:40px;width:calc( 50% - 6px );" onclick="onForwardDirection()" data-sw-translate>Forward</button>
+            </div>
         </div>
-        
-        <div style="margin-top:10px;">
-            <button style="width:calc( 33% - 6px );height:40px;margin-top:10px;margin-right:6px;" onclick="onStartTask()" data-sw-translate>Start Task</button>
-            <button style="width:calc( 33% - 6px );height:40px;margin-top:10px;margin-right:6px;" onclick="getTaskStatus()" data-sw-translate>Update Status</button>
-            <button style="width:calc( 33% - 6px );height:40px;margin-top:10px;" onclick="onStopTask()" data-sw-translate>Stop Task</button>
-        </div>
-        </p>
-    </div>
-
-    <div id="Browser" class="tabcontent">
-        <p>
-            <span>SD > </span><span>images/</span><span>202304/</span>
-        </p>
     </div>
     <div id="Setting" class="tabcontent">
-        <div style="position:relative;height:100px;">
-            <span style="line-height:24px;vertical-align: middle;" data-sw-translate>UDisk-Mode:</span><label style="position:absolute;right:0px;" class="switch">
-                <input type="checkbox" id="check-udisk">
-                <span class="swslider"></span>
-            </label>
-        </div>
-        <div style="position:relative;height:100px;">
-            <label for="lang-select" data-sw-translate>Language:</label>
-            <select style="position:absolute;right:0px;" name="langs" id="lang-select">
-                <option value="en">English</option>
-                <option value="zh_CN">中文</option>
-            </select>
+        <div>
+            <div>
+                <span data-sw-translate>Current:</span>
+                <input type="number" id="current-input" autoFocus value="1000"
+                    style="position:absolute;right:42px;width:80px;text-align: center;border-top: 0px;border-left: 0px;border-right: 0px;"></input>
+                <span data-sw-translate style="position:absolute;right:6px;">mA</span>
+            </div>
+            <div><input type="range" min="1" max="2000" value="1000" class="slider" id="current-range"></div>
+            <div>
+                <span data-sw-translate>Microsteps:</span>
+                <input type="number" id="microsteps-input" autoFocus value="256"
+                    style="position:absolute;right:42px;width:80px;text-align: center;border-top: 0px;border-left: 0px;border-right: 0px;"></input>
+                <span data-sw-translate style="position:absolute;right:6px;"></span>
+            </div>
+            <div><input type="range" min="1" max="2000" value="9" class="slider" id="microsteps-range"></div>
+            <div>
+                <span data-sw-translate>Gear Ratio:</span>
+                <input type="number" id="ratio-input" autoFocus value="34"
+                    style="position:absolute;right:42px;width:80px;text-align: center;border-top: 0px;border-left: 0px;border-right: 0px;"></input>
+                <span data-sw-translate style="position:absolute;right:6px;"></span>
+            </div>
+            <div><input type="range" min="1" max="256" value="34" class="slider" id="ratio-range"></div>
+            <div style="position:relative;height:100px;">
+                <label for="lang-select" data-sw-translate>Language:</label>
+                <select style="position:absolute;right:0px;" name="langs" id="lang-select">
+                    <option value="en">English</option>
+                    <option value="zh_CN">中文</option>
+                </select>
+            </div>
         </div>
     </div>
     <script src="api.js"></script>
